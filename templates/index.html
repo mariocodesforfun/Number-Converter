@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Converter</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Number Converter</h1>
+        <form id="converterForm">
+            <div class="form-group">
+                <label for="decimal_binary">Enter a Decimal Number:</label>
+                <input type="number" class="form-control" id="decimal_binary" name="decimal" required>
+            </div>
+            <button type="button" id="convertBtn" class="btn btn-primary">Convert to Binary</button>
+        </form>
+    </div>
+
+    <div class="result-container" style="display: none;">
+        <h2>Conversion Results:</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody id="resultBody">
+                <tr>
+                    <td>Binary</td>
+                    <td><p></p></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
+<script>
+    document.getElementById('convertBtn').addEventListener('click', function() {
+        var decimal = document.getElementById('decimal_binary').value;
+            
+        fetch(`/number_converter/decimal_to_binary/${decimal}`)
+            .then(response => response.json())
+            .then(data => {
+                var resultBody = document.getElementById('resultBody');
+                resultBody.innerHTML = ''; // Clear existing rows
+                    
+                // Generate table rows dynamically
+                data.forEach(entry => {
+                    var row = `<tr>
+                        <td>${entry.type}</td>
+                        <td>${entry.value}</td>
+                    </tr>`;
+                 resultBody.innerHTML += row;
+            });
+            document.querySelector('.result-container').style.display = 'block';
+            })
+        .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
